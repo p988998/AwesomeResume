@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupEducationUI() {
-        // TODO 3: Display the education data onto the UI
         // Follow the example in setupBasicInfoUI
         // You will probably find formatItems method useful when displaying the courses
         ((TextView) findViewById(R.id.education_school)).setText(education.school);
