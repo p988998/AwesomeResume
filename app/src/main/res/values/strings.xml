@@ -15,4 +15,5 @@
     <string name="start_date">start_date</string>
     <string name="end_date">end_date</string>
     <string name="education_edit_course_hint">courses</string>
+    <string name="action_delete">Delete</string>
 </resources>

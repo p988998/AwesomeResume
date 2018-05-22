@@ -47,9 +47,6 @@ public class MainActivity extends AppCompatActivity {
     private void setupUI() {
         setContentView(R.layout.activity_main);
 
-        setupBasicInfoUI();
-        setupEducationsUI();
-
         ((ImageButton)findViewById(R.id.add_education_btn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQ_CODE_EDUCATION_EDIT);
             }
         });
+
+        setupBasicInfoUI();
+        setupEducationsUI();
     }
 
     private void setupBasicInfoUI() {
@@ -70,14 +70,30 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout educationsContainer = (LinearLayout) findViewById(R.id.education_container);
         educationsContainer.removeAllViews();
         for(Education education:educations){
-            View view = getLayoutInflater().inflate(R.layout.education_item, null);
-            String timeSpan = "(" + DateUtils.dateToString(education.startDate) + " ~ " + DateUtils.dateToString(education.endDate) + ")";
-            ((TextView) view.findViewById(R.id.education_school)).setText(education.school + timeSpan);
-            ((TextView) view.findViewById(R.id.education_courses)).setText(formatItems(education.courses));
-
-            educationsContainer.addView(view);
+            View educationView = getLayoutInflater().inflate(R.layout.education_item, null);
+            setupEducation(educationView, education);
+            educationsContainer.addView(educationView);
         }
 
+    }
+
+    private void setupEducation(View educationView, final Education education) {
+        String dateString = DateUtils.dateToString(education.startDate)
+                + " ~ " + DateUtils.dateToString(education.endDate);
+        ((TextView) educationView.findViewById(R.id.education_school))
+                .setText(education.school + " " + education.major + " (" + dateString + ")");
+        ((TextView) educationView.findViewById(R.id.education_courses))
+                .setText(formatItems(education.courses));
+
+        ImageButton editEducationBtn = (ImageButton) educationView.findViewById(R.id.edit_education_btn);
+        editEducationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, EducationEditActivity.class);
+                intent.putExtra(EducationEditActivity.KEY_EDUCATION, education);
+                startActivityForResult(intent, REQ_CODE_EDUCATION_EDIT);
+            }
+        });
     }
 
     private void fakeData() {

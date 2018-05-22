@@ -3,11 +3,14 @@ package com.jiuzhang.guojing.awesomeresume;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 import com.jiuzhang.guojing.awesomeresume.model.Education;
@@ -16,35 +19,52 @@ import com.jiuzhang.guojing.awesomeresume.util.DateUtils;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class EducationEditActivity extends AppCompatActivity {
+public class EducationEditActivity extends EditBaseActivity<Education> {
 
     public static final String KEY_EDUCATION = "education";
+    public static final String KEY_EDUCATION_ID = "education_id";
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_education_edit);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    protected Education initializeData() {
+        return getIntent().getParcelableExtra(KEY_EDUCATION);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_edit, menu);
-        return super.onCreateOptionsMenu(menu);
+    protected int getLayoutId() {
+        return R.layout.activity_education_edit;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
-            finish();
-            return true;
-        }else if(item.getItemId() == R.id.action_save){
-            saveAndExit();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    protected void setupUIForCreate() {
+        findViewById(R.id.education_edit_delete).setVisibility(View.GONE);
     }
 
-    private void saveAndExit(){
+    @Override
+    protected void setupUIForEdit(@NonNull final Education data) {
+        ((EditText) findViewById(R.id.education_edit_school))
+                .setText(data.school);
+        ((EditText) findViewById(R.id.education_edit_major))
+                .setText(data.major);
+        ((EditText) findViewById(R.id.education_edit_course))
+                .setText(TextUtils.join("\n", data.courses));
+
+        ((EditText) findViewById(R.id.education_edit_start_date))
+                .setText(DateUtils.dateToString(data.startDate));
+        ((EditText) findViewById(R.id.education_edit_end_date))
+                .setText(DateUtils.dateToString(data.endDate));
+
+        findViewById(R.id.education_edit_delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(KEY_EDUCATION_ID, data.id);
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
+            }
+        });
+    }
+
+    protected void saveAndExit(@Nullable Education data){
         Education education = new Education();
         education.school = ((EditText)findViewById(R.id.education_edit_school)).getText().toString();
         education.major = ((EditText)findViewById(R.id.education_edit_major)).getText().toString();
