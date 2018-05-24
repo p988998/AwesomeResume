@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupUI() {
         setContentView(R.layout.activity_main);
 
-        ((ImageButton)findViewById(R.id.add_education_btn)).setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.add_education_btn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, EducationEditActivity.class);
