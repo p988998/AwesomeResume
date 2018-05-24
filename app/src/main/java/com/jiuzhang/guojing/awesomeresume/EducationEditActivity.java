@@ -36,7 +36,7 @@ public class EducationEditActivity extends EditBaseActivity<Education> {
 
     @Override
     protected void setupUIForCreate() {
-        findViewById(R.id.education_edit_delete).setVisibility(View.GONE);
+        //findViewById(R.id.education_edit_delete).setVisibility(View.GONE);
     }
 
     @Override
@@ -65,17 +65,19 @@ public class EducationEditActivity extends EditBaseActivity<Education> {
     }
 
     protected void saveAndExit(@Nullable Education data){
-        Education education = new Education();
-        education.school = ((EditText)findViewById(R.id.education_edit_school)).getText().toString();
-        education.major = ((EditText)findViewById(R.id.education_edit_major)).getText().toString();
-        education.startDate = DateUtils.stringToDate(
+        if(data == null){
+            data = new Education();
+        }
+        data.school = ((EditText)findViewById(R.id.education_edit_school)).getText().toString();
+        data.major = ((EditText)findViewById(R.id.education_edit_major)).getText().toString();
+        data.startDate = DateUtils.stringToDate(
                 ((EditText)findViewById(R.id.education_edit_start_date)).getText().toString());
-        education.endDate = DateUtils.stringToDate(
+        data.endDate = DateUtils.stringToDate(
                 ((EditText)findViewById(R.id.education_edit_end_date)).getText().toString());
-        education.courses = Arrays.asList(TextUtils.split(
+        data.courses = Arrays.asList(TextUtils.split(
                 ((EditText)findViewById(R.id.education_edit_course)).getText().toString(), "\n"));
         Intent resultIntent = new Intent();
-        resultIntent.putExtra(KEY_EDUCATION,  education);
+        resultIntent.putExtra(KEY_EDUCATION,  data);
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
     }
