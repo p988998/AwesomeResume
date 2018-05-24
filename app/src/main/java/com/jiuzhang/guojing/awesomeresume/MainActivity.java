@@ -39,7 +39,18 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQ_CODE_EDUCATION_EDIT && resultCode == RESULT_OK){
             Education newEducation = data.getParcelableExtra(EducationEditActivity.KEY_EDUCATION);
-            educations.add(newEducation);
+            boolean isUpdate = false;
+            for(int i = 0; i < educations.size(); i++){
+                if(educations.get(i).id.equals(newEducation.id)){
+                    educations.set(i, newEducation);
+                    isUpdate = true;
+                    break;
+                }
+            }
+            if(!isUpdate){
+                educations.add(newEducation);
+            }
+
             setupEducationsUI();
         }
     }
@@ -81,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         String dateString = DateUtils.dateToString(education.startDate)
                 + " ~ " + DateUtils.dateToString(education.endDate);
         ((TextView) educationView.findViewById(R.id.education_school))
-                .setText(education.school + " " + education.major + " (" + dateString + ")");
+                .setText(education.school + " (" + dateString + ")");
         ((TextView) educationView.findViewById(R.id.education_courses))
                 .setText(formatItems(education.courses));
 
