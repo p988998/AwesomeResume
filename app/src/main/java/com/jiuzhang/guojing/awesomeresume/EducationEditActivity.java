@@ -36,7 +36,7 @@ public class EducationEditActivity extends EditBaseActivity<Education> {
 
     @Override
     protected void setupUIForCreate() {
-        //findViewById(R.id.education_edit_delete).setVisibility(View.GONE);
+        findViewById(R.id.education_edit_delete).setVisibility(View.GONE);
     }
 
     @Override

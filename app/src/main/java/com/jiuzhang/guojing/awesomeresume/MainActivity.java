@@ -8,9 +8,11 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.jiuzhang.guojing.awesomeresume.model.BasicInfo;
 import com.jiuzhang.guojing.awesomeresume.model.Education;
 import com.jiuzhang.guojing.awesomeresume.util.DateUtils;
+import com.jiuzhang.guojing.awesomeresume.util.ModelUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ import static com.jiuzhang.guojing.awesomeresume.EducationEditActivity.KEY_EDUCA
 @SuppressWarnings("ConstantConditions")
 public class MainActivity extends AppCompatActivity {
     private static final int REQ_CODE_EDUCATION_EDIT = 100;
+    private static final String MODEL_EDUCATION = "educations";
     private BasicInfo basicInfo;
     private List<Education> educations = new ArrayList<Education>();
 
@@ -30,27 +33,45 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         fakeData();
+        loadData();
         setupUI();
 
+    }
+
+    private void loadData() {
+        List<Education> saveEducation = ModelUtils.read(this, MODEL_EDUCATION, new TypeToken<List<Education>>(){});
+        educations = saveEducation == null? new ArrayList<Education>():saveEducation;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQ_CODE_EDUCATION_EDIT && resultCode == RESULT_OK){
-            Education newEducation = data.getParcelableExtra(EducationEditActivity.KEY_EDUCATION);
-            boolean isUpdate = false;
-            for(int i = 0; i < educations.size(); i++){
-                if(educations.get(i).id.equals(newEducation.id)){
-                    educations.set(i, newEducation);
-                    isUpdate = true;
-                    break;
+            String educationID = data.getStringExtra(EducationEditActivity.KEY_EDUCATION_ID);
+            if( educationID != null){
+                //delete education
+                for(int i = 0; i < educations.size(); i++){
+                    if(educations.get(i).id.equals(educationID)){
+                        educations.remove(i);
+                    }
                 }
             }
-            if(!isUpdate){
-                educations.add(newEducation);
+            else
+            {
+                Education newEducation = data.getParcelableExtra(EducationEditActivity.KEY_EDUCATION);
+                boolean isUpdate = false;
+                for(int i = 0; i < educations.size(); i++){
+                    if(educations.get(i).id.equals(newEducation.id)){
+                        educations.set(i, newEducation);
+                        isUpdate = true;
+                        break;
+                    }
+                }
+                if(!isUpdate){
+                    educations.add(newEducation);
+                }
             }
-
+            ModelUtils.save(this, MODEL_EDUCATION, educations);
             setupEducationsUI();
         }
     }
@@ -112,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         basicInfo.name = "Nijin Pan";
         basicInfo.email = "pannijin@gmail.com";
 
-        Education education = new Education();
+        /*Education education = new Education();
         education.school = "UMD";
         education.major = "Computer Science";
         education.startDate = DateUtils.stringToDate("09/2014");
@@ -131,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         education2.courses.add("Database");
 
         educations.add(education);
-        educations.add(education2);
+        educations.add(education2);*/
     }
 
     public static String formatItems(List<String> items) {
