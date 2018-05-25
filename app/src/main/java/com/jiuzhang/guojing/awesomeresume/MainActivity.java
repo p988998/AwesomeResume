@@ -21,25 +21,32 @@ import static com.jiuzhang.guojing.awesomeresume.EducationEditActivity.KEY_EDUCA
 public class MainActivity extends AppCompatActivity {
     private static final int REQ_CODE_EDUCATION_EDIT = 100;
     private BasicInfo basicInfo;
-    private List<Education> educations = new ArrayList<Education>();
-
-
+    private List<Education> educations = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         fakeData();
         setupUI();
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        boolean isUpdate;
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQ_CODE_EDUCATION_EDIT && resultCode == RESULT_OK){
+            isUpdate = false;
             Education newEducation = data.getParcelableExtra(EducationEditActivity.KEY_EDUCATION);
-            educations.add(newEducation);
+            for(int i = 0; i < educations.size(); i++){
+                if(educations.get(i).id.equals(newEducation.id) ){
+                    educations.set(i, newEducation);
+                    isUpdate = true;
+                    break;
+                }
+            }
+            if(!isUpdate){
+                educations.add(newEducation);
+            }
             setupEducationsUI();
         }
     }
@@ -47,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupUI() {
         setContentView(R.layout.activity_main);
 
-        ((ImageButton)findViewById(R.id.add_education_btn)).setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.add_education_btn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, EducationEditActivity.class);
@@ -81,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         String dateString = DateUtils.dateToString(education.startDate)
                 + " ~ " + DateUtils.dateToString(education.endDate);
         ((TextView) educationView.findViewById(R.id.education_school))
-                .setText(education.school + " " + education.major + " (" + dateString + ")");
+                .setText(education.school + " "  + " (" + dateString + ")");
         ((TextView) educationView.findViewById(R.id.education_courses))
                 .setText(formatItems(education.courses));
 
