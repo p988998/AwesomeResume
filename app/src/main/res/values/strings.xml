@@ -16,4 +16,5 @@
     <string name="end_date">end_date</string>
     <string name="education_edit_course_hint">courses</string>
     <string name="action_delete">Delete</string>
+    <string name="choose_user_picture">choose picture</string>
 </resources>

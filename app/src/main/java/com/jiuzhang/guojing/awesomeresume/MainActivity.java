@@ -87,6 +87,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        (findViewById(R.id.edit_basic_info)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, EducationEditActivity.class);
+                startActivityForResult(intent, REQ_CODE_EDUCATION_EDIT);
+            }
+        });
+
+
         setupBasicInfoUI();
         setupEducationsUI();
     }
