@@ -1,5 +1,6 @@
 package com.jiuzhang.guojing.awesomeresume.model;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,6 +10,8 @@ public class BasicInfo implements Parcelable{
 
     public String email;
 
+    public Uri imageUri;
+
     public BasicInfo(){
 
     }
@@ -16,6 +19,7 @@ public class BasicInfo implements Parcelable{
     protected BasicInfo(Parcel in){
         name = in.readString();
         email = in.readString();
+        imageUri = in.readParcelable(Uri.class.getClassLoader());
     }
 
     public static final Creator<BasicInfo> CREATOR = new Creator<BasicInfo>() {
@@ -39,5 +43,6 @@ public class BasicInfo implements Parcelable{
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
         parcel.writeString(email);
+        parcel.writeParcelable(imageUri, i);
     }
 }

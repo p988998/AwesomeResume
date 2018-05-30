@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <FrameLayout
+        android:id="@+id/basic_info_edit_image_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_picture_jumbo_height"
         android:background="?attr/selectableItemBackground">
