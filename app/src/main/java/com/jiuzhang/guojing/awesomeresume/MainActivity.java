@@ -3,7 +3,10 @@ package com.jiuzhang.guojing.awesomeresume;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.view.Display;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,7 +25,9 @@ import static com.jiuzhang.guojing.awesomeresume.EducationEditActivity.KEY_EDUCA
 @SuppressWarnings("ConstantConditions")
 public class MainActivity extends AppCompatActivity {
     private static final int REQ_CODE_EDUCATION_EDIT = 100;
+    private static final int REQ_CODE_BASIC_INFO_EDIT = 101;
     private static final String MODEL_EDUCATION = "educations";
+    private static final String MODEL_BASIC_INFO = "basic_info";
     private BasicInfo basicInfo;
     private List<Education> educations = new ArrayList<Education>();
 
@@ -32,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        fakeData();
+       // fakeData();
         loadData();
         setupUI();
 
@@ -41,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
     private void loadData() {
         List<Education> saveEducation = ModelUtils.read(this, MODEL_EDUCATION, new TypeToken<List<Education>>(){});
         educations = saveEducation == null? new ArrayList<Education>():saveEducation;
+
+        BasicInfo  saveBasicInfo = ModelUtils.read(this, MODEL_BASIC_INFO, new TypeToken<BasicInfo>(){});
+        basicInfo = saveBasicInfo == null? new BasicInfo(): saveBasicInfo;
+
+
     }
 
     @Override
@@ -73,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
             }
             ModelUtils.save(this, MODEL_EDUCATION, educations);
             setupEducationsUI();
+        }else if(requestCode == REQ_CODE_BASIC_INFO_EDIT && resultCode == RESULT_OK){
+            BasicInfo newBasicinfo = data.getParcelableExtra(BasicInfoEditActivity.KEY_BASIC_INFO);
+            basicInfo = newBasicinfo;
+            ModelUtils.save(this, MODEL_BASIC_INFO, basicInfo);
+            setupBasicInfoUI();
         }
     }
 
@@ -90,8 +105,9 @@ public class MainActivity extends AppCompatActivity {
         (findViewById(R.id.edit_basic_info)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, EducationEditActivity.class);
-                startActivityForResult(intent, REQ_CODE_EDUCATION_EDIT);
+                Intent intent = new Intent(MainActivity.this, BasicInfoEditActivity.class);
+                intent.putExtra(BasicInfoEditActivity.KEY_BASIC_INFO, basicInfo);
+                startActivityForResult(intent, REQ_CODE_BASIC_INFO_EDIT);
             }
         });
 
@@ -101,8 +117,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupBasicInfoUI() {
-        ((TextView) findViewById(R.id.name)).setText(basicInfo.name);
-        ((TextView) findViewById(R.id.email)).setText(basicInfo.email);
+        ((TextView) findViewById(R.id.name)).setText(TextUtils.isEmpty(basicInfo.name)? "Your name":basicInfo.name);
+        ((TextView) findViewById(R.id.email)).setText(TextUtils.isEmpty(basicInfo.email)? "Your name":basicInfo.email);
     }
 
     private void setupEducationsUI() {
@@ -137,32 +153,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void fakeData() {
-        basicInfo = new BasicInfo();
-        basicInfo.name = "Nijin Pan";
-        basicInfo.email = "pannijin@gmail.com";
-
-        /*Education education = new Education();
-        education.school = "UMD";
-        education.major = "Computer Science";
-        education.startDate = DateUtils.stringToDate("09/2014");
-        education.endDate = DateUtils.stringToDate("06/2016");
-        education.courses = new ArrayList<>();
-        education.courses.add("Algorithm");
-        education.courses.add("Database");
-
-        Education education2 = new Education();
-        education2.school = "WSU";
-        education2.major = "Computer Science";
-        education2.startDate = DateUtils.stringToDate("09/2010");
-        education2.endDate = DateUtils.stringToDate("06/2014");
-        education2.courses = new ArrayList<>();
-        education2.courses.add("Algorithm");
-        education2.courses.add("Database");
-
-        educations.add(education);
-        educations.add(education2);*/
-    }
 
     public static String formatItems(List<String> items) {
         StringBuilder sb = new StringBuilder();

@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".EducationEditActivity"></activity>
+        <activity android:name=".BasicInfoEditActivity"></activity>
     </application>
 
 </manifest>
