@@ -8,6 +8,7 @@ import android.view.Display;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 import com.jiuzhang.guojing.awesomeresume.model.BasicInfo;
 import com.jiuzhang.guojing.awesomeresume.model.Education;
 import com.jiuzhang.guojing.awesomeresume.util.DateUtils;
+import com.jiuzhang.guojing.awesomeresume.util.ImageUtils;
 import com.jiuzhang.guojing.awesomeresume.util.ModelUtils;
 
 import java.util.ArrayList;
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        //super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQ_CODE_EDUCATION_EDIT && resultCode == RESULT_OK){
             String educationID = data.getStringExtra(EducationEditActivity.KEY_EDUCATION_ID);
             if( educationID != null){
@@ -102,14 +104,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        (findViewById(R.id.edit_basic_info)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, BasicInfoEditActivity.class);
-                intent.putExtra(BasicInfoEditActivity.KEY_BASIC_INFO, basicInfo);
-                startActivityForResult(intent, REQ_CODE_BASIC_INFO_EDIT);
-            }
-        });
+
 
 
         setupBasicInfoUI();
@@ -119,6 +114,23 @@ public class MainActivity extends AppCompatActivity {
     private void setupBasicInfoUI() {
         ((TextView) findViewById(R.id.name)).setText(TextUtils.isEmpty(basicInfo.name)? "Your name":basicInfo.name);
         ((TextView) findViewById(R.id.email)).setText(TextUtils.isEmpty(basicInfo.email)? "Your name":basicInfo.email);
+
+        ImageView userPicture = (ImageView) findViewById(R.id.user_picture);
+        if(basicInfo.imageUri != null){
+        //if(basicInfo.picturePath != null){
+            ImageUtils.loadImage(this, basicInfo.imageUri, userPicture);
+        }else{
+            userPicture.setImageResource(R.drawable.ic_baseline_person_24px);
+        }
+
+        (findViewById(R.id.edit_basic_info)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, BasicInfoEditActivity.class);
+                intent.putExtra(BasicInfoEditActivity.KEY_BASIC_INFO, basicInfo);
+                startActivityForResult(intent, REQ_CODE_BASIC_INFO_EDIT);
+            }
+        });
     }
 
     private void setupEducationsUI() {
