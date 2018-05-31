@@ -35,6 +35,7 @@ import java.util.Arrays;
 public class BasicInfoEditActivity extends EditBaseActivity<BasicInfo> {
     public static final String KEY_BASIC_INFO = "basic_info";
     private static final int REQ_CODE_PICK_IMAGE = 100;
+    private Uri newUri;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -44,7 +45,7 @@ public class BasicInfoEditActivity extends EditBaseActivity<BasicInfo> {
             if(imageUri != null){
                 String embeddedPath = getImagePathFromInputStreamUri(imageUri);
 
-                Uri newUri = Uri.parse("file://" + embeddedPath);
+                newUri = Uri.parse("file://" + embeddedPath);
                 showImage(newUri);
             }
         }

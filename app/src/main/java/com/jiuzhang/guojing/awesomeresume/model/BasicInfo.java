@@ -13,8 +13,6 @@ public class BasicInfo implements Parcelable{
 
     public Uri imageUri;
 
-    //public String picturePath;
-
     public BasicInfo(){
 
     }
@@ -23,7 +21,6 @@ public class BasicInfo implements Parcelable{
         name = in.readString();
         email = in.readString();
         imageUri = in.readParcelable(Uri.class.getClassLoader());
-        //imageUri = in.readString();
 
     }
 
@@ -49,7 +46,6 @@ public class BasicInfo implements Parcelable{
         parcel.writeString(name);
         parcel.writeString(email);
         parcel.writeParcelable(imageUri, i);
-        //parcel.writeString(imageUri);
 
     }
 }
