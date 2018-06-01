@@ -131,6 +131,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQ_CODE_BASIC_INFO_EDIT);
             }
         });
+
+        (findViewById(R.id.user_picture)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Intent intent = new Intent(MainActivity.this, BasicInfoEditActivity.class);
+//                intent.putExtra(BasicInfoEditActivity.KEY_BASIC_INFO, basicInfo);
+//                startActivityForResult(intent, REQ_CODE_BASIC_INFO_EDIT);
+            }
+        });
     }
 
     private void setupEducationsUI() {

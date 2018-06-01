@@ -5,8 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -23,14 +22,6 @@ import com.jiuzhang.guojing.awesomeresume.util.ImageUtils;
 import com.jiuzhang.guojing.awesomeresume.util.ModelUtils;
 import com.jiuzhang.guojing.awesomeresume.util.PermissionUtils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Arrays;
 
 public class BasicInfoEditActivity extends EditBaseActivity<BasicInfo> {
     public static final String KEY_BASIC_INFO = "basic_info";
@@ -43,7 +34,7 @@ public class BasicInfoEditActivity extends EditBaseActivity<BasicInfo> {
         if(requestCode == REQ_CODE_PICK_IMAGE && resultCode == Activity.RESULT_OK){
             Uri imageUri = data.getData();
             if(imageUri != null){
-                String embeddedPath = getImagePathFromInputStreamUri(imageUri);
+                String embeddedPath = ModelUtils.getImagePathFromInputStreamUri(imageUri, this);
 
                 newUri = Uri.parse("file://" + embeddedPath);
                 showImage(newUri);
@@ -126,59 +117,4 @@ public class BasicInfoEditActivity extends EditBaseActivity<BasicInfo> {
         startActivityForResult(Intent.createChooser(intent, "Select picture"), REQ_CODE_PICK_IMAGE);
     }
 
-    public String getImagePathFromInputStreamUri(Uri uri) {
-        InputStream inputStream = null;
-        String filePath = null;
-
-        if (uri.getAuthority() != null) {
-            try {
-                inputStream = getContentResolver().openInputStream(uri); // context needed
-                File photoFile = createTemporalFileFrom(inputStream);
-
-                filePath = photoFile.getPath();
-
-            } catch (FileNotFoundException e) {
-                // log
-            } catch (IOException e) {
-                // log
-            }finally {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return filePath;
-    }
-
-    private File createTemporalFileFrom(InputStream inputStream) throws IOException {
-        File targetFile = null;
-
-        if (inputStream != null) {
-            int read;
-            byte[] buffer = new byte[8 * 1024];
-
-            targetFile = createTemporalFile();
-            OutputStream outputStream = new FileOutputStream(targetFile);
-
-            while ((read = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, read);
-            }
-            outputStream.flush();
-
-            try {
-                outputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return targetFile;
-    }
-
-    private File createTemporalFile() {
-        return new File(getExternalCacheDir(), "tempFile.jpg"); // context needed
-    }
 }
