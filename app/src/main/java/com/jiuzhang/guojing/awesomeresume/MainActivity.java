@@ -33,16 +33,11 @@ public class MainActivity extends AppCompatActivity {
     private BasicInfo basicInfo;
     private List<Education> educations = new ArrayList<Education>();
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-       // fakeData();
         loadData();
         setupUI();
-
     }
 
     private void loadData() {
@@ -104,9 +99,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         setupBasicInfoUI();
         setupEducationsUI();
     }
@@ -117,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
 
         ImageView userPicture = (ImageView) findViewById(R.id.user_picture);
         if(basicInfo.imageUri != null){
-        //if(basicInfo.picturePath != null){
             ImageUtils.loadImage(this, basicInfo.imageUri, userPicture);
         }else{
             userPicture.setImageResource(R.drawable.ic_baseline_person_24px);
@@ -135,9 +126,10 @@ public class MainActivity extends AppCompatActivity {
         (findViewById(R.id.user_picture)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity.this, BasicInfoEditActivity.class);
-//                intent.putExtra(BasicInfoEditActivity.KEY_BASIC_INFO, basicInfo);
+                Intent intent = new Intent(MainActivity.this, UserPictureActivity.class);
+                intent.putExtra(UserPictureActivity.KEY_BASIC_PIC, basicInfo);
 //                startActivityForResult(intent, REQ_CODE_BASIC_INFO_EDIT);
+                startActivity(intent);
             }
         });
     }
@@ -152,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
             setupEducation(educationView, education);
             educationsContainer.addView(educationView);
         }
-
     }
 
     private void setupEducation(View educationView, final Education education) {
@@ -173,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     public static String formatItems(List<String> items) {
         StringBuilder sb = new StringBuilder();
